@@ -1,7 +1,7 @@
 import { AppDataSource } from '../data-source.js';
 import { Todo } from '../entities/todo-entity.js';
 import { Task } from '../entities/task-entity.js';
-import { type CreateTodoDto, DeleteTodoDto, EditTodoDto } from '../dtos/todo-dto.js';
+import { EditTodoDto } from '../dtos/todo-dto.js';
 
 class TodoService {
   todoRepository: any;
@@ -20,7 +20,7 @@ class TodoService {
     return todos;
   }
   
-  async createTodo(name: CreateTodoDto) {
+  async createTodo(name: string) {
     const todoExists = await this.todoRepository.findOne({where: {name}});
     if (todoExists) {
       throw new Error('This todo already exists');
@@ -29,14 +29,10 @@ class TodoService {
   }
   
   async editTodo({id, name}: EditTodoDto) {
-    const updatedTodo = await this.todoRepository.update({id}, {name});
-    if (updatedTodo.affected === 0) {
-      throw new Error('Todo not found');
-    }
-    return updatedTodo;
+    return await this.todoRepository.update({id}, {name});
   }
   
-  async deleteTodo(id: DeleteTodoDto) {
+  async deleteTodo(id: number) {
     const deletedTodo = await this.todoRepository.delete(id);
     if (deletedTodo.affected === 0) {
       throw new Error('Todo not found');

@@ -1,10 +1,11 @@
 import taskService from '../services/task-service.js';
 import type { Request, Response } from 'express';
+import { type CreateTaskDto, DeleteTaskDto, EditTaskDto, EditTaskPositionDto, GetTasksDto } from '../dtos/task-dto.js';
 
 class TaskController {
   async getAllTasks(req: Request, res: Response) {
     try {
-      const {id} = req.query;
+      const {id} = req.query as unknown as GetTasksDto;
       const tasks = await taskService.getAllTasks(String(id));
       res.json(tasks);
     } catch (error) {
@@ -12,27 +13,27 @@ class TaskController {
     }
   }
   
-  async createTask(req: Request, res: Response) {
+  async createTask(req: Request<{}, {}, CreateTaskDto, {}>, res: Response) {
     try {
-      const {id, name, description, position} = req.body;
-      const task = await taskService.createTask({id, name, description, position});
+      const {id, name, description, position, status, priority} = req.body;
+      const task = await taskService.createTask({id, name, description, position, status, priority});
       res.status(201).json(task);
     } catch (error) {
       res.status(500).json(error);
     }
   }
   
-  async editTask(req: Request, res: Response) {
+  async editTask(req: Request<{}, {}, EditTaskDto, {}>, res: Response) {
     try {
-      const {id, name, description, position, status} = req.body;
-      const task = await taskService.editTask({id, name, description, position, status});
+      const {id, name, description, position, status, priority} = req.body;
+      const task = await taskService.editTask({id, name, description, position, status, priority});
       res.json(task);
     } catch (error) {
       res.status(500).json(error);
     }
   }
   
-  async editTaskPosition(req: Request, res: Response) {
+  async editTaskPosition(req: Request<{}, {}, EditTaskPositionDto, {}>, res: Response) {
     try {
       const {list} = req.body;
       const updated = await taskService.editTaskPosition(list);
@@ -42,7 +43,7 @@ class TaskController {
     }
   }
   
-  async deleteTask(req: Request, res: Response) {
+  async deleteTask(req: Request<{}, {}, DeleteTaskDto, {}>, res: Response) {
     try {
       const {id} = req.body;
       await taskService.deleteTask(id);

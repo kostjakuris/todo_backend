@@ -1,7 +1,7 @@
 import { AppDataSource } from '../data-source.js';
 import { Task } from '../entities/task-entity.js';
 import { Todo } from '../entities/todo-entity.js';
-import { type CreateTaskDto, DeleteTaskDto, EditTaskDto, EditTaskPositionDto } from '../dtos/task-dto.js';
+import { type CreateTaskDto, EditTaskDto, EditTaskPositionDto } from '../dtos/task-dto.js';
 
 export class TaskService {
   taskRepository: any;
@@ -20,10 +20,11 @@ export class TaskService {
       throw new Error('Todo Not Found');
     }
     
-    return await this.taskRepository.find({where: {todo}});
+    const tasks = await this.taskRepository.find({where: {todo}});
+    return await this.filterTasks(tasks);
   }
   
-  async createTask({id, name, description, position}: CreateTaskDto) {
+  async createTask({id, name, description, position, status, priority}: CreateTaskDto) {
     const todo = await this.todoRepository.findOne({where: {id}});
     if (!todo) {
       throw new Error('This todo wasn`t found');
@@ -34,17 +35,22 @@ export class TaskService {
       description,
       todo,
       position,
+      status,
+      priority
     });
   }
   
-  async editTask({id, name, description, position, status}: EditTaskDto) {
-    return await this.taskRepository.update(
-      {id},
-      {name, description, position, status}
+  async editTask(dto: EditTaskDto) {
+    const { id, ...rest } = dto;
+    
+    const updateData = Object.fromEntries(
+      Object.entries(rest).filter(([_, value]) => value !== undefined && value !== '')
     );
+    
+    return await this.taskRepository.update({ id }, updateData);
   }
   
-  async editTaskPosition(list: EditTaskPositionDto) {
+  async editTaskPosition(list: EditTaskPositionDto[]) {
     const changedList = await this.changeTasksPosition(list);
     
     for (const item of changedList) {
@@ -62,7 +68,7 @@ export class TaskService {
     return changedList;
   }
   
-  async deleteTask(id: DeleteTaskDto) {
+  async deleteTask(id: number) {
     return await this.taskRepository.delete(id);
   }
   
@@ -77,6 +83,12 @@ export class TaskService {
     });
     
     return tasks.map((task: Task) => correctTasks[task.id]);
+  }
+  
+  async filterTasks(tasks: Task[]) {
+    const undoneTasks = tasks.filter((task: Task) => task.status === 'undone');
+    const doneTasks = tasks.filter((task: Task) => task.status === 'done');
+    return {undone: undoneTasks, done: doneTasks, all: tasks};
   }
 }
 
