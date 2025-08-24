@@ -3,13 +3,14 @@ import 'dotenv/config';
 import { Todo } from './entities/todo-entity.js';
 import { Task } from './entities/task-entity.js';
 
+const password = encodeURIComponent(String(process.env.DATABASE_PASSWORD));
+const port = Number(process.env.DATABASE_PORT);
+const host = String(process.env.DATABASE_HOST);
+
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  username: String(process.env.POSTGRES_USER),
-  password: String(process.env.POSTGRES_PASSWORD),
-  host: String(process.env.POSTGRES_HOST),
-  port: Number(process.env.POSTGRES_PORT),
-  database: String(process.env.POSTGRES_DB),
+  url: `postgresql://postgres.${host}:${password}@aws-1-eu-north-1.pooler.supabase.com:${port}/postgres`,
+  ssl: {rejectUnauthorized: false},
   synchronize: true,
   logging: false,
   entities: [Task, Todo],

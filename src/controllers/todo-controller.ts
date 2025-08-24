@@ -20,7 +20,6 @@ class TodoController {
       const todo = await TodoService.createTodo(name);
       res.json(todo);
     } catch (error: any) {
-      console.error(error);
       res.status(500).json(error);
     }
   }

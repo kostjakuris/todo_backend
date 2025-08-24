@@ -14,8 +14,8 @@ class TodoService {
   
   async getAllTodos() {
     const todos = await this.todoRepository.find();
-    if (!todos || todos.length === 0) {
-      throw new Error('No todos found');
+    if (todos.length === 0) {
+      return [];
     }
     return todos;
   }
