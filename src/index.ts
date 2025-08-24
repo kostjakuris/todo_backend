@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: 'https://todo-front-v449.vercel.app',
+  origin: String(process.env.FRONTEND_URL),
   optionSuccessStatus: 200,
 };
 
