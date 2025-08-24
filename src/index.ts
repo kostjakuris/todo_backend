@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-  origin: String(process.env.HOST_URL),
+  origin: 'https://todo-backend-one-rust.vercel.app/',
   optionSuccessStatus: 200,
 };
 
