@@ -12,12 +12,11 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-const corsOptions = {
-  origin: 'https://todo-backend-one-rust.vercel.app',
-  optionsSuccessStatus: 200,
-};
-
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: ['https://todo-backend-one-rust.vercel.app'],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+}));
 
 app.use('/task', taskRouter);
 app.use('/todo', todoRouter);
