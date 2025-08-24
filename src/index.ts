@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: String(process.env.HOST_URL),
+  origin: '*',
   optionsSuccessStatus: 200,
 };
 
