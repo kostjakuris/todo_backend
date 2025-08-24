@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: String(process.env.HOST_URL),
+  origin: 'https://todo-backend-one-rust.vercel.app',
   optionsSuccessStatus: 200,
 };
 
