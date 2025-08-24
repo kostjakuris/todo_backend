@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: ['https://todo-backend-one-rust.vercel.app'],
+  origin: ['https://todo-backend-one-rust.vercel.app', 'http://localhost:3000'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 }));
