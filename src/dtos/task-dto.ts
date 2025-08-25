@@ -52,7 +52,7 @@ export class EditTaskDto {
   
   @IsNumber({}, {message: 'Position be a number'})
   @IsOptional()
-  position!: number;
+  position?: number;
   
   @IsOptional()
   @IsEnum(Status, {message: 'Status must be undone or done'})

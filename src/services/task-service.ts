@@ -41,13 +41,13 @@ export class TaskService {
   }
   
   async editTask(dto: EditTaskDto) {
-    const { id, ...rest } = dto;
+    const {id, ...rest} = dto;
     
     const updateData = Object.fromEntries(
       Object.entries(rest).filter(([_, value]) => value !== undefined && value !== '')
     );
     
-    return await this.taskRepository.update({ id }, updateData);
+    return await this.taskRepository.update({id}, updateData);
   }
   
   async editTaskPosition(list: EditTaskPositionDto[]) {
@@ -69,7 +69,11 @@ export class TaskService {
   }
   
   async deleteTask(id: number) {
-    return await this.taskRepository.delete(id);
+    const deletedTask = await this.taskRepository.delete(id);
+    if (deletedTask.affected === 0) {
+      throw new Error('Todo not found');
+    }
+    return deletedTask;
   }
   
   async changeTasksPosition(tasks: any) {
